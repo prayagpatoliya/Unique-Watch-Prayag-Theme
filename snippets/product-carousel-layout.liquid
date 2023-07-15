@@ -1,0 +1,52 @@
+{%- liquid
+  assign th_st = settings
+  assign product_style = th_st.product_style
+  assign cls = st.collection
+  if bl != blank
+    assign cls = bl
+  endif
+  assign item_desktop = st.item_desktop
+  assign limit_products = st.limit_products | plus: 0
+  assign carousel_autoplay = st.carousel_autoplay
+  assign carousel_loop = st.carousel_loop
+  assign carousel_arrows = st.carousel_arrows
+  assign carousel_bullets = st.carousel_bullets
+  assign column_gap = st.column_gap
+-%}
+
+<div
+  class="swiper bls__swiper grid-{{ product_style }} hover__show-nav"
+  id="bls__swiper-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-autoplay="{{ carousel_autoplay }}"
+  data-loop="{{ carousel_loop }}"
+  data-mobile="2"
+  data-tablet="3"
+  data-desktop="{{ item_desktop }}"
+  data-spacing="{{ column_gap }}"
+>
+  {%- assign collection = collections[cls] -%}
+  <div class="swiper-wrapper" style="--perload-gap: {{ column_gap }}px">
+    {%- if collection.products.size == 0 -%}
+      {%- for i in (1..limit_products) -%}
+        <div class="swiper-slide">
+          <div class="bls__product-item">
+            {%- render 'responsive-image' | type: 'product' | cls: 'bls__product-tab-plh' -%}
+            <div class="bls__product-details pt-15">
+              <a role="link" aria-disabled="true">{{ 'products.product.product_placeholder' | t }}</a>
+              <div>{%- render 'price' -%}</div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for product in collection.products limit: limit_products -%}
+        {%- if product.available -%}{%- assign sold_out = false -%}{%- endif -%}
+        <div class="swiper-slide">
+          {%- render 'product-item' | product: product -%}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+  {%- render 'swiper-control', show_bullet: carousel_bullets, show_arrow: carousel_arrows -%}
+</div>

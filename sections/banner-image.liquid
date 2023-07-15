@@ -1,0 +1,460 @@
+{% liquid
+  assign st = section.settings
+  assign container = st.container
+  assign text_align = st.text_align
+  assign design_banner = st.design_banner
+  assign banner_column_desktop = st.banner_column_desktop
+  assign column_gap = st.column_gap
+  assign hover_effect = st.hover_effect
+
+  assign column_gap_tablet = ''
+  if column_gap > 30
+    assign column_gap_tablet = ' gap-tablet'
+  endif
+  assign column_gap_mobile = ''
+  if column_gap > 15
+    assign column_gap_mobile = ' gap-mobile'
+  endif
+
+  assign spt_tablet = ''
+  if st.padding_top > 50
+    assign spt_tablet = ' spt-tablet'
+  endif
+  assign spt_mobile = ''
+  if st.padding_top > 30
+    assign spt_mobile = ' spt-mobile'
+  endif
+  assign spb_tablet = ''
+  if st.padding_bottom > 50
+    assign spb_tablet = ' spb-tablet'
+  endif
+  assign spb_mobile = ''
+  if st.padding_bottom > 30
+    assign spb_mobile = ' spb-mobile'
+  endif
+
+  assign reset_spacing = ''
+  if st.reset_spacing
+    assign reset_spacing = ' remove_spacing'
+  endif
+
+  assign design_banner = ''
+  if st.design_banner == 'text-overlay-image'
+    assign design_banner = ' absolute static-lg inset-0'
+  elsif st.design_banner == 'text-below-image'
+    assign design_banner = ''
+  endif
+
+  assign design_banner_position = ''
+  if st.design_banner == 'text-overlay-image'
+    assign design_banner_position = 'h-full'
+  endif
+
+  assign design_banner_content = ''
+  if st.design_banner == 'text-below-image'
+    assign design_banner_content = 'mt-20'
+  elsif st.design_banner == 'text-overlay-image'
+    assign design_banner_content = ' static absolute-lg inset-0 p-30 pl-8o'
+  endif
+
+  assign text_position = ''
+  if st.text_position == 'top'
+    assign text_position = ' justify-content-start'
+  elsif st.text_position == 'center'
+    assign text_position = ' justify-content-center'
+  elsif st.text_position == 'bottom'
+    assign text_position = ' justify-content-end'
+  endif
+%}
+{%- capture style -%}
+  --spt: {{ st.padding_top }}px; --section-padding-bottom: {{ st.padding_bottom }}px; --bls-gutter-x:
+  {{ column_gap }}px;
+{%- endcapture -%}
+
+<section
+  class="bls__section{{ spt_tablet }}{{ spb_tablet }}{{ spt_mobile }}{{ spt_mobile }} bls__banner {{ reset_spacing }}"
+  style="{{ style | strip | strip_newlines }}"
+>
+  <div class="{{ container }} section-full">
+    <div
+      class="row{{ column_gap_tablet }}{{ column_gap_mobile }}"
+      style="--bs-gutter-x: {{ column_gap }}px;"
+    >
+      {%- for block in section.blocks -%}
+        {% liquid
+          assign bs = block.settings
+          assign h_text_weight = bs.h_text_weight
+          assign text_size = ''
+          if bs.text_size == 'small'
+            assign text_size = 'fs-30'
+          elsif bs.text_size == 'medium'
+            assign text_size = 'fs-40'
+          elsif bs.text_size == 'large'
+            assign text_size = 'fs-48'
+          endif
+
+          assign sub_text_size = ''
+          if bs.text_size == 'small'
+            assign sub_text_size = 'fs-14'
+          elsif bs.text_size == 'medium'
+            assign sub_text_size = 'fs-14'
+          elsif bs.text_size == 'large'
+            assign sub_text_size = 'fs-18'
+          endif
+        %}
+        <div class="{{ block.settings.banner_width }} bls__banner-item">
+          <div class="bls__banner-inner relative overflow-hidden  {{ design_banner_position }}">
+            <div class="bls__banner-media h-full {{ design_banner }} overflow-hidden">
+              <a
+                aria-label="links"
+                class="hover-{{ hover_effect }} hover-effect"
+                {% if bs.link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ bs.link }}"
+                {% endif %}
+              >
+                {%- if bs.image != blank -%}
+                  {%- render 'responsive-image' | image: bs.image | width: "100vw" | cls: "h-full" -%}
+                {%- else -%}
+                  {%- render 'responsive-image' | cls: "h-full" -%}
+                {%- endif -%}
+              </a>
+            </div>
+            <div class="bls__banner-content {% if st.design_banner == 'text-overlay-image' %}pointer-events-none{% endif %} flex flex-column relative z-1 {{ block.settings.color }} {{ text_align }}{{ text_position}} {{ design_banner_content }}">
+              {%- if bs.subtext != blank -%}
+                <p class="bls__banner-subtext heading-color fw-600 mb-10 {{ sub_text_size }}">
+                  {{ bs.subtext }}
+                </p>
+              {%- endif -%}
+              {%- if bs.title != blank -%}
+                <h3 class="bls__banner-heading mb-10 {{ text_size }}" style="font-weight: {{ h_text_weight }};">
+                  {{ bs.title | escape }}
+                </h3>
+              {%- endif -%}
+              {%- if bs.content != blank -%}
+                <p class="bls__banner-text mb-30-important">{{ bs.content | escape }}</p>
+              {%- endif -%}
+              {%- if bs.btn_content != blank -%}
+                <div class="bls__banner-button {% if st.design_banner == 'text-overlay-image' %} pt-10 {% endif %}">
+                  <a
+                    {% if bs.link == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ bs.link }}"
+                    {% endif %}
+                    class="bls__banner-btn whitespace-nowrap btn-{{ bs.button_type }}"
+                  >
+                    {{ bs.btn_content | escape }}
+                  </a>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Banner image",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "select",
+      "id": "container",
+      "label": "Layout",
+      "default": "container",
+      "options": [
+        {
+          "value": "container",
+          "label": "Default"
+        },
+        {
+          "value": "container-fluid",
+          "label": "Fluid container"
+        },
+        {
+          "value": "full-width",
+          "label": "Full width"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Hover effect",
+      "default": "zoom",
+      "options": [
+        {
+          "value": "zoom",
+          "label": "Zoom"
+        },
+        {
+          "value": "translate-to-top",
+          "label": "Translate to top"
+        },
+        {
+          "value": "translate-to-bottom",
+          "label": "Translate to bottom"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "design_banner",
+      "label": "Design",
+      "options": [
+        {
+          "value": "text-overlay-image",
+          "label": "Text overlay image"
+        },
+        {
+          "value": "text-below-image",
+          "label": "Text below image"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Content position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "info": "Only active when choosing text overlay image"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Content align",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Text left"
+        },
+        {
+          "value": "text-right",
+          "label": "Text right"
+        },
+        {
+          "value": "text-center",
+          "label": "Text center"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "min": 0,
+      "max": 50,
+      "unit": "px",
+      "step": 5,
+      "default": 30,
+      "label": "Column gap",
+      "id": "column_gap"
+    },
+
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "reset_spacing",
+      "label": "Remove default space between sections",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_banner",
+      "name": "Banner item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "banner_width",
+          "label": "Banner width",
+          "default": "col-md-6",
+          "options": [
+            {
+              "value": "col-md-3",
+              "label": "25%"
+            },
+            {
+              "value": "col-md-4",
+              "label": "33%"
+            },
+            {
+              "value": "col-md-6",
+              "label": "50%"
+            },
+            {
+              "value": "col-md-8",
+              "label": "66%"
+            },
+            {
+              "value": "col-md-9",
+              "label": "75%"
+            },
+            {
+              "value": "col-12",
+              "label": "100%"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Banner image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Text color",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "text-white",
+              "label": "Light"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "Text size",
+          "default": "medium",
+          "options": [
+            {
+              "value": "small",
+              "label": "Default"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "h_text_weight",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Heading weight",
+          "default": 400
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "subtext",
+          "label": "Subtext",
+          "default": "Subtext"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Description"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Button type",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary"
+            },
+            {
+              "value": "link",
+              "label": "Link"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "btn_content",
+          "label": "Button label",
+          "default": "Shop now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner image",
+      "blocks": [
+        {
+          "type": "image_banner"
+        },
+        {
+          "type": "image_banner"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

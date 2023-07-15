@@ -1,0 +1,135 @@
+{{ 'popup.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign th_st = settings
+  assign header_layout = th_st.header_layout
+  assign container = th_st.container
+  assign transparent = th_st.enable_transparent_header
+  assign header_transparent_text_color = th_st.header_transparent_text_color
+  assign header_full_width = th_st.header_full_width
+  assign top_search = th_st.show_top_search
+  assign my_account = th_st.show_my_account
+  assign wishlist = th_st.show_wishlist_icon
+  assign minicart = th_st.show_minicart
+  assign enable_sticky = th_st.sticky_header
+  assign sticky_mobile = th_st.sticky_header_mobile
+  assign transparent_class = ''
+  if template.name == 'index' and transparent
+    assign transparent_class = 'transparent'
+  endif
+-%}
+
+<header
+  id="page-header"
+  class="page-header h-{{transparent_class}}"
+  data-sticky="{{ enable_sticky }}"
+  data-sticky-mobile="{{ sticky_mobile }}"
+>
+  <div class="header-container {{ header_layout }}">
+    {%- liquid
+      section 'top-bar'
+    -%}
+    <div class="header-{{transparent_class}}">
+      <div
+        class="header-middle {{transparent_class }} {% if header_transparent_text_color == "#ffffff" %} bg-sticky-dark{% endif %}"
+        id="sticky-header"
+      >
+        {%- case header_layout -%}
+          {%- when 'h_layout1' -%}
+            <div class="{{ container }} d-flex align-items-center">
+              <div class="col-header-left d-inline-flex justify-content-center justify-content-lg-start">
+                {%- render 'logo', isTransparent: transparent -%}
+              </div>
+              <div class="col-header-center col-menu-center bls_submenu-center">
+                {%- render 'toggle-menu' -%}
+                {%- liquid
+                  section 'horizontal-menu'
+                -%}
+              </div>
+              <div class="col-header-right d-flex justify-content-end align-items-center">
+                {%- liquid
+                  if top_search
+                    render 'top-search'
+                  endif
+                  if my_account
+                    render 'my-account'
+                  endif
+                  if wishlist
+                    render 'wishlist'
+                  endif
+                  if minicart
+                    render 'minicart'
+                  endif
+                -%}
+              </div>
+            </div>
+          {%- when 'h_layout2' -%}
+            <div class="middle-top">
+              <div class="{{ container }} d-flex align-items-center">
+                <div class="col-header-left d-inline-flex justify-content-center justify-content-lg-start">
+                  {%- render 'toggle-menu' -%}
+                  {%- liquid
+                    render 'country-switcher'
+                    render 'language-switcher'
+                  -%}
+                </div>
+                <div class="col-header-center d-flex justify-content-center">
+                  {%- render 'logo', isTransparent: transparent -%}
+                </div>
+                <div class="col-header-right d-flex justify-content-end align-items-center">
+                  {%- liquid
+                    if top_search
+                      render 'top-search'
+                    endif
+                    if my_account
+                      render 'my-account'
+                    endif
+                    if wishlist
+                      render 'wishlist'
+                    endif
+                    if minicart
+                      render 'minicart'
+                    endif
+                  -%}
+                </div>
+              </div>
+            </div>
+            <div class="middle-bottom">
+              <div class="container  d-flex justify-content-center col-menu-center bls_submenu-center">
+                {%- liquid
+                  section 'horizontal-menu'
+                -%}
+              </div>
+            </div>
+          {%- when 'h_layout3' -%}
+            <div class="{{ container }} d-flex align-items-center">
+              <div class="col-header-left d-inline-flex justify-content-center justify-content-lg-start">
+                {%- render 'toggle-menu' -%}
+                {%- liquid
+                  section 'horizontal-menu'
+                -%}
+              </div>
+              <div class="col-header-center d-flex justify-content-center">
+                {%- render 'logo', isTransparent: transparent -%}
+              </div>
+              <div class="col-header-right d-flex justify-content-end align-items-center">
+                {%- liquid
+                  if top_search
+                    render 'top-search'
+                  endif
+                  if my_account
+                    render 'my-account'
+                  endif
+                  if wishlist
+                    render 'wishlist'
+                  endif
+                  if minicart
+                    render 'minicart'
+                  endif
+                -%}
+              </div>
+            </div>
+        {%- endcase -%}
+      </div>
+    </div>
+  </div>
+</header>

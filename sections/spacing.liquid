@@ -1,0 +1,24 @@
+<div class="bls__spacing" style="--height: {{ section.settings.spacing }}px;"></div>
+{%- schema -%}
+{
+  "name": "Spacing",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 30,
+      "label": "Space"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spacing"
+    }
+  ]
+}
+{%- endschema -%}

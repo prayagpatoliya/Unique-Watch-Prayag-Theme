@@ -1,0 +1,10 @@
+{%- liquid
+  assign image_payment = section.settings.image_payment
+  assign image_payment_width = section.settings.payment_icons_width
+-%}
+
+{%- if image_payment != blank -%}
+  <div class="bls__footer_payment mb-10 mb-lg-0" style="width: {{ image_payment_width }}px;">
+    {%- render 'responsive-image', image: section.settings.image_payment -%}
+  </div>
+{%- endif -%}

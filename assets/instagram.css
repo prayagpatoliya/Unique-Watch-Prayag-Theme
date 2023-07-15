@@ -1,0 +1,47 @@
+/* instagram */
+.bls__instagram-item{
+    position: relative;
+}
+.bls_instagram-image{
+    position: relative;
+    overflow: hidden;
+}
+.bls__instagram-icon{
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -40%);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.4s;
+    pointer-events: none;
+    z-index: 1;
+    font-size: 0;
+}
+.bls__instagram-icon::after{
+    content: "\e99c";
+    font-family: 'blueskytechco' !important;
+    font-size: 16px;
+    align-items: center;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    transition: opacity .32s cubic-bezier(.4,0,.21,.99),transform .32s cubic-bezier(.4,0,.21,.99);
+    width: 60px;
+    will-change: transform;
+}
+.bls__instagram-item:hover .bls__instagram-icon{
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+}

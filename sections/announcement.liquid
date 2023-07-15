@@ -1,0 +1,148 @@
+{%- liquid
+  assign st = section.settings
+  assign container = st.container
+  assign show_announcement = st.show_announcement
+  assign homepage_only = st.homepage_only
+  assign message = st.message
+  assign show_close = st.show_close
+  assign bar_text_color = st.bar_text_color
+  assign bar_background_color = st.bar_background_color
+  assign close_btn_color = st.close_btn_color
+  assign bar_font_size = st.bar_font_size
+  assign bar_uppercase = st.bar_uppercase
+  assign show_mobile = st.show_mobile
+  assign show = false
+  if homepage_only
+    if request.page_type == 'index'
+      assign show = true
+    endif
+  else
+    assign show = true
+  endif
+-%}
+{%- capture style -%}
+  --announcement-bar-color : {{ bar_text_color }}; --announcement-bar-bg : {{ bar_background_color }}; --close-btn-color
+  : {{ close_btn_color }}; --announcement-bar-font-size : {{ bar_font_size }}px;
+{%- endcapture -%}
+{% if show_announcement and message != blank %}
+  {% if show %}
+    <section
+      data-section-id="{{ section.id }}"
+      id="announcement-bar"
+      class="announcement-bar relative active{% if show_mobile == blank %} d-none d-sm-block{% endif %}"
+      style="{{ style | strip | strip_newlines }}"
+    >
+      <div class="{{ container }}">
+        <div class="announcement-bar-content text-center fw-500 py-7 px-15 {% if bar_uppercase %}uppercase{% endif %}">
+          {{ message }}
+        </div>
+        {% if show_close %}
+          <a
+            rel="nofollow"
+            href="#"
+            class="announcement-close absolute right-15 position-center-y"
+            aria-label="close"
+            ><i class="icon-x"></i
+          ></a>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "class": "announcement_bar",
+  "settings": [
+    {
+      "type": "select",
+      "id": "container",
+      "label": "Layout",
+      "default": "container",
+      "options": [
+        {
+          "value": "container",
+          "label": "Default"
+        },
+        {
+          "value": "container-fluid",
+          "label": "Fluid container"
+        },
+        {
+          "value": "full-width",
+          "label": "Full width"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage_only",
+      "label": "Home page only",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close",
+      "label": "Show close button",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "message",
+      "label": "Message",
+      "default": "<p>Summer discount on all accessories and free delivery nationwide - Sale 50% Off!</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile",
+      "label": "Show in mobile",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "bar_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "label": "Font size",
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "bar_uppercase",
+      "label": "Uppercase",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "bar_background_color",
+      "label": "Background color",
+      "default": "#ba271a"
+    },
+    {
+      "type": "color",
+      "id": "bar_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "close_btn_color",
+      "label": "Button close color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}

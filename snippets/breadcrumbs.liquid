@@ -1,0 +1,75 @@
+{%- unless template == 'index' or template == 'list-collections' or template == '404' -%}
+  {%- assign t = template | split: '.' | first -%}
+  <nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+    <ol class="bls__breadcrumb-list d-inline-flex p-0 list-none my-0">
+      <li class="bls__breadcrumb-item capitalize">
+        <a class="bls__breadcrumb-link" href="/">{{ 'general.breadcrumb.home' | t }}</a>
+        <span aria-hidden="true" class="bls__breadcrumb-separator pr-4">/</span>
+      </li>
+      {%- case t -%}
+        {%- when 'page' -%}
+          <li class="bls__breadcrumb-item capitalize">
+            <span class="bls__breadcrumb-link grey-color" aria-current="page">{{ page.title }}</span>
+          </li>
+        {%- when 'product' -%}
+          {%- if collection.url -%}
+            <li class="bls__breadcrumb-item capitalize">
+              {{ collection.title | link_to: collection.url }}
+              <span aria-hidden="true" class="bls__breadcrumb-separator pr-4">/</span>
+            </li>
+          {%- endif -%}
+          <li class="bls__breadcrumb-item capitalize">
+            <span class="bls__breadcrumb-link grey-color" aria-current="page">{{ product.title }}<span>
+          </li>
+        {%- when 'collection' and collection.handle -%}
+          {%- if current_tags -%}
+            <li class="bls__breadcrumb-item capitalize">
+              {{ collection.title | link_to: collection.url }}
+            </li>
+            <li class="bls__breadcrumb-item capitalize">
+              {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: '+' }}{%- endcapture -%}
+              <span aria-hidden="true" class="bls__breadcrumb-separator px-4">/</span>
+              <span class="bls__breadcrumb-link grey-color" aria-current="page">
+                {{- current_tags | join: ' + ' -}}
+              </span>
+            </li>
+          {%- else -%}
+            <li class="bls__breadcrumb-item capitalize">
+              <span class="bls__breadcrumb-link grey-color" aria-current="page">
+                {{- collection.title -}}
+              </span>
+            </li>
+          {%- endif -%}
+        {%- when 'blog' -%}
+          {%- if current_tags -%}
+            <li class="bls__breadcrumb-item capitalize">
+              {{ blog.title | link_to: blog.url }}
+            </li>
+            <li class="bls__breadcrumb-item capitalize">
+              {%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: '+' }}{%- endcapture -%}
+              <span aria-hidden="true" class="bls__breadcrumb-separator px-4">/</span>
+              <span class="bls__breadcrumb-link grey-color" aria-current="page">
+                {{- current_tags | join: ' + ' -}}
+              </span>
+            </li>
+          {%- else -%}
+            <li class="bls__breadcrumb-item capitalize">
+              <span class="bls__breadcrumb-link grey-color" aria-current="page">{{ blog.title }}</span>
+            </li>
+          {%- endif -%}
+        {%- when 'article' -%}
+          <li class="bls__breadcrumb-item capitalize">
+            {{ blog.title | link_to: blog.url }}
+          </li>
+          <li class="bls__breadcrumb-item capitalize">
+            <span aria-hidden="true" class="bls__breadcrumb-separator px-4">/</span>
+            <span class="bls__breadcrumb-link grey-color" aria-current="page">{{ article.title }}</span>
+          </li>
+        {%- else -%}
+          <li class="bls__breadcrumb-item capitalize">
+            <span class="bls__breadcrumb-link grey-color" aria-current="page">{{ page_title }}</span>
+          </li>
+      {%- endcase -%}
+    </ol>
+  </nav>
+{%- endunless -%}

@@ -1,0 +1,174 @@
+{%- liquid
+  assign th_st = settings
+  assign free_shipping = th_st.free_shipping_progress_bar
+  assign shipping_rate = th_st.shipping_rate | times: 100 | default: 0
+  assign shipping_rate_price = shipping_rate | money
+  if settings.currency_code_enabled
+    assign shipping_rate_price = shipping_rate | money_with_currency
+  endif
+  assign cart_countdown = th_st.cart_countdown
+-%}
+{%- if free_shipping and shipping_rate > 0 -%}
+  {%- liquid
+    assign items_subtotal_price = cart.items_subtotal_price
+    assign shipping_price = shipping_rate
+  -%}
+  <div class="cart_threshold bls__cart-thres-js{% if cart.items.size > 0 and items_subtotal_price > shipping_price %} cart_shipping_free{% endif %}">
+    <div class="cart_shipping">
+      {%- if cart.items.size > 0 -%}
+        {%- if items_subtotal_price > shipping_price -%}
+          <div class="cart_bar_w">
+            <span class="percent_shipping_bar" style="width: 100%;"></span>
+          </div>
+          <div class="bls__cart-thres cart_thres_3 fw-500">{{ 'general.cart.cart_thres3_html' | t }}</div>
+        {%- elsif items_subtotal_price < shipping_price -%}
+          <div class="cart_bar_w">
+            <span
+              class="percent_shipping_bar"
+              style="width: {{ items_subtotal_price | times: 100 | divided_by: shipping_price | round }}%;"
+            ></span>
+          </div>
+          <div class="bls__cart-thres art_thres_2 fw-500">
+            {{ 'general.cart.cart_thres2_html' | t: price: shipping_rate_price }}
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="cart_bar_w">
+          <span class="percent_shipping_bar" style="width: 0%;"></span>
+        </div>
+        <div class="bls__cart-thres cart_thres_1 fw-500">
+          {{ 'general.cart.cart_thres1_html' | t: price: shipping_rate_price }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+{%- if cart_countdown -%}
+  {%- if cart.items.size > 0 and cart.item_count == 1 -%}
+    <div
+      class="cart-countdown-time"
+      data-countdown-time="{{ th_st.cart_countdown_duration }}"
+      data-timeout-message="{{ 'general.cart.timeout_message' | t }}"
+    >
+      <div class="countdown-message">
+        {%- capture html -%}
+          <strong class="timer">
+            <span class="countdown-timer-minute">00</span>
+            <span>m</span>
+            <span class="countdown-timer-sec">0</span>
+            <span>s</span>
+          </strong>
+        {%- endcapture -%}
+        {{ 'general.cart.countdown_message_html' | t: html: html }}
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}
+<form id="form-mini-cart" action="{{ routes.cart_url }}" method="post" class="checkout-form" novalidate>
+  {%- if cart.items.size > 0 -%}
+    <div class="bls-minicart-body">
+      <div class="bls-items">
+        {% for item in cart.items %}
+          {%- render 'cart-item', item: item -%}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="bls-cart-footer">
+      {%- render 'cart-addons' -%}
+      <div class="bls-cart-summary" data-cart-summary>
+        <div data-discounts>
+          <ul class="bls-cart-discounts" data-discounts-list>
+            {% unless cart.cart_level_discount_applications.size == 0 %}
+              {% for discount in cart.cart_level_discount_applications %}
+                <li>
+                  <span>
+                    {% if settings.currency_code_enabled %}
+                      {{- discount.title | upcase }}&nbsp;(-{{ discount.total_allocated_amount | money_with_currency }})
+                    {% else %}
+                      {{- discount.title | upcase }}&nbsp;(-{{ discount.total_allocated_amount | money }})
+                    {% endif %}
+                  </span>
+                </li>
+              {% endfor %}
+            {% endunless %}
+          </ul>
+        </div>
+        <div class="bls-subtotal" data-cart-subtotal>
+          <span class="font-medium heading-color">{{ 'general.cart.subtotal' | t }}</span>
+          <span class="bls-subtotal-price heading-color" data-cart-subtotal-price>
+            {% if settings.currency_code_enabled %}
+              {{ cart.total_price | money_with_currency }}
+            {% else %}
+              {{ cart.total_price | money }}
+            {% endif %}
+          </span>
+        </div>
+      </div>
+      <div class="bls-drawer-bottom">
+        {% assign show_terms = false %}
+        {% if settings.agree_text != blank and settings.show_agree_on_cart %}
+          <div class="agree-terms">
+            <label>
+              <input type="checkbox" name="agree_terms" value="yes" required>
+              <span>{{ settings.agree_text }}</span>
+            </label>
+          </div>
+          {% assign show_terms = true %}
+        {% endif %}
+
+        {%- if settings.enable_cart_terms_conditions -%}
+          <div class="bls__terms-conditions flex mb-15">
+            <div class="checkbox-group relative">
+              <input
+                class="input m-0 opacity-0 absolute inset-0 pointer conditions_form_minicart"
+                type="checkbox"
+                name="conditions"
+                id="conditions_form_minicart"
+              >
+              <span class="checkmark"></span>
+            </div>
+            <label class="label pointer" for="conditions_form_minicart">
+              {{ settings.content_terms_conditions }}
+            </label>
+          </div>
+        {%- endif -%}
+        <a class="action btn btn-secondary viewcart" href="{{ routes.cart_url }}">
+          <span>{{ 'general.cart.viewcart' | t }}</span>
+        </a>
+        <button
+          type="submit"
+          class="btn btn-primary bls-btn-checkout"
+          name="checkout"
+          {% if settings.enable_cart_terms_conditions %}
+            disabled
+          {% endif %}
+        >
+          <span>{{ 'general.cart.checkout' | t }}</span>
+        </button>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="bls-cart-body">
+      <div class="cart-empty text-center">
+        
+        <p class="empty description">
+          <svg width="62" height="69" viewBox="0 0 62 69" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M2.08737 28.4645C2.08737 28.4645 2.08737 28.4645 2.08737 28.4645L2.73622 31.7945C2.84185 32.3366 2.48803 32.8616 1.94594 32.9673C1.40385 33.0729 0.878769 32.7191 0.773143 32.177L0.124283 28.847C-0.665369 24.7938 2.40693 21 6.52744 21H55.4733C59.5451 21 62.6061 24.7104 61.898 28.7297L55.7575 63.5715C55.2054 66.7055 52.5032 69 49.3328 69H13.9327C10.8871 69 8.25497 66.8784 7.57386 63.8981C7.57386 63.8981 7.57386 63.8981 7.57386 63.8981L6.61662 59.71C6.49356 59.1716 6.83027 58.6354 7.36867 58.5123C7.90707 58.3893 8.44328 58.726 8.56634 59.2644L9.52358 63.4524C9.99963 65.5355 11.8324 67 13.9327 67H49.3328C51.5189 67 53.4017 65.416 53.7878 63.2245L59.9283 28.3827C60.4248 25.565 58.2786 23 55.4733 23H6.52744C3.68849 23 1.53379 25.623 2.08737 28.4645Z" fill="#DEDEDE"/>
+            <path d="M28.9027 2.47902C29.391 1.74918 29.1972 0.760308 28.4699 0.27033C27.7425 -0.219647 26.7571 -0.0251418 26.2688 0.704705L9.76598 25.3734C9.2777 26.1032 9.47153 27.0921 10.1988 27.5821C10.9262 28.072 11.9116 27.8775 12.3999 27.1477L28.9027 2.47902Z" fill="#DEDEDE"/>
+            <path d="M49.6341 26.9818C50.3923 27.422 51.3625 27.162 51.8014 26.401C52.2397 25.6401 51.9806 24.6664 51.2224 24.2262L31.0853 12.5365C30.327 12.0963 29.3567 12.3563 28.9181 13.1173C28.4794 13.8781 28.7385 14.8518 29.4967 15.292L49.6341 26.9818Z" fill="#DEDEDE"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M31.0099 46.9028C30.7467 46.9639 30.423 47.2225 30.2155 47.4984C29.7609 48.1028 28.9649 48.1704 28.4376 47.6495C27.9102 47.1285 27.8512 46.2162 28.3058 45.6118C28.7285 45.0498 29.5089 44.3029 30.5098 44.0707C31.0378 43.9482 31.6328 43.9702 32.2308 44.2541C32.8242 44.5358 33.335 45.0345 33.7603 45.7078C34.1687 46.354 34.0425 47.2573 33.4786 47.7253C32.9147 48.1933 32.1266 48.0487 31.7183 47.4024C31.5084 47.0702 31.3454 46.9614 31.266 46.9237C31.1911 46.8882 31.114 46.8787 31.0099 46.9028Z" fill="#DEDEDE"/>
+            <path d="M22.5 42C23.3284 42 24 41.3284 24 40.5C24 39.6716 23.3284 39 22.5 39C21.6716 39 21 39.6716 21 40.5C21 41.3284 21.6716 42 22.5 42Z" fill="#DEDEDE"/>
+            <path d="M39.5 42C40.3287 42 41 41.3284 41 40.5C41 39.6716 40.3287 39 39.5 39C38.6713 39 38 39.6716 38 40.5C38 41.3284 38.6713 42 39.5 42Z" fill="#DEDEDE"/>
+          </svg>
+          <span class="empty-des fw-500 subtitle fs-18">{{ 'general.cart.subtitle' | t }}</span>
+          {{ 'general.cart.description' | t }}
+        </p>
+        <div class="button-close-cart mt-30 pt-10">
+          <button type="button" class="bls-minicart-action close-cart btn-primary">
+            <span>{{ 'general.cart.return_shop' | t }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+</form>

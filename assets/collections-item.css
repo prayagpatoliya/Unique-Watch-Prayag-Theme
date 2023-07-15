@@ -1,0 +1,263 @@
+@media only screen and (min-width: 1200px) {
+    .swiper.reveal_on_scroll {
+        overflow: visible;
+    }
+}
+
+.collection-item {
+    --collection-title-size: 1.6rem;
+    --collection-title-weight: 500;
+    --collection-title-color: var(--heading-color);
+
+    --collection-count-size: 1.4rem;
+    --collection-count-color: var(--grey-color);
+    --collection-count-weight: 400;
+}
+
+.bls__collection-title {
+    font-size: var(--collection-title-size);
+    font-weight: var(--collection-title-weight);
+    color: var(--collection-title-color);
+    text-transform: capitalize;
+}
+
+.bls__collection-count {
+    font-size: var(--collection-count-size);
+    font-weight: var(--collection-count-weight);
+    color: var(--collection-count-color);
+}
+
+.bls__collection-count::before {
+    content: "(";
+}
+
+.bls__collection-count::after {
+    content: ")";
+}
+
+.collection-infinite-scroll .button {
+    cursor: pointer;
+}
+
+.bls__collection-content .bls__collection-image {
+    max-width: var(--image-width);
+    margin: auto;
+}
+
+.bls__collection-content.radius .bls__collection-image {
+    border-radius: 5px;
+}
+
+.bls__collection-content.rounded .bls__collection-image {
+    border-radius: 50%;
+}
+
+/* Design 1 and collection list */
+.design-1 .bls__collection-infor.show-count,
+.collection-list__item .bls__collection-infor.show-count {
+    position: absolute;
+    inset: auto 2rem 2rem 2rem;
+    background-color: var(--color-white);
+    padding: 2rem;
+    border-radius: var(--btn-border-radius);
+    text-align: center;
+    z-index: 2;
+}
+
+.design-1 .bls__collection-infor:not(.show-count),
+.collection-list__item .bls__collection-infor:not(.show-count) {
+    inset: auto 0 3rem;
+    margin: 0 1rem;
+}
+
+@media only screen and (min-width: 768px) {
+
+    .design-1 .bls__collection-infor:not(.show-count),
+    .collection-list__item .bls__collection-infor:not(.show-count) {
+        margin: 0 3rem;
+    }
+}
+
+.template-collection #MainContent .design-1 .bls__collection-infor:not(.show-count),
+.template-collection #MainContent .collection-list__item .bls__collection-infor:not(.show-count) {
+    inset: auto 0 2rem;
+    margin: 0 2rem;
+}
+
+.design-1 .bls__collection-infor:not(.show-count) .bls__collection-title,
+.collection-list__item .bls__collection-infor:not(.show-count) .bls__collection-title,
+.bls__collection-packery .bls__collection-title {
+    margin: auto;
+    padding: 10px;
+    border-radius: var(--btn-border-radius);
+    background-color: var(--color-white);
+    width: 100%;
+    max-width: 23rem;
+    text-align: center;
+}
+
+/* Design 3 */
+.design-3 .bls__collection-count {
+    padding-left: 5px;
+    position: relative;
+    top: -8px;
+    --collection-count-weight: 500;
+    --collection-count-size: 1.2rem;
+}
+
+.design-3 .bls__collection-count::before,
+.design-3 .bls__collection-count::after,
+.design-3 .bls__collection-count span {
+    display: none;
+}
+
+.design-3 .bls__collection-infor {
+    justify-content: center;
+}
+
+/* Collection packery */
+.bls__collection-packery .bls__collection-infor {
+    position: absolute;
+    inset: auto 0 1rem;
+    pointer-events: none;
+}
+
+.bls__collection-packery .row .collection-item {
+    height: 100%;
+}
+
+@media only screen and (min-width: 480px) {
+    .grid-5 {
+        grid-template-columns: 30% 20% 20% 30%;
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .grid-5 .bls__collection-column:first-child {
+        grid-area: 1/1/3/2;
+    }
+
+    .grid-5 .bls__collection-column:nth-child(2) {
+        grid-area: 1/2/2/4;
+    }
+
+    .grid-5 .bls__collection-column:last-child {
+        grid-area: 1/4/3/5;
+    }
+
+    .grid-4 .bls__collection-column:first-child {
+        grid-area: 1/1/3/3;
+    }
+
+    .grid-4 .bls__collection-column:nth-child(2) {
+        grid-area: 1/3/3/4;
+    }
+
+    .grid-3 .bls__collection-column:first-child {
+        grid-area: 1/1/3/2;
+    }
+
+    .grid-3 .bls__collection-column:last-child {
+        grid-area: 2/2/3/3;
+    }
+
+}
+
+@media only screen and (min-width: 480px) and (max-width: 991px) {
+    .grid-5 .bls__collection-column:first-child {
+        grid-area: 1/1/3/3;
+    }
+
+    .grid-5 .bls__collection-column:nth-child(2) {
+        grid-area: 3/1/4/5;
+    }
+
+    .grid-5 .bls__collection-column:nth-child(3) {
+        grid-area: 4/1/5/3;
+    }
+
+    .grid-5 .bls__collection-column:nth-child(4) {
+        grid-area: 4/3/5/5;
+    }
+
+    .grid-5 .bls__collection-column:last-child {
+        grid-area: 1/3/3/5;
+    }
+
+    .grid-4 .bls__collection-column:first-child {
+        grid-area: 1/1/3/5;
+    }
+
+    .grid-4 .bls__collection-column:nth-child(2) {
+        grid-area: 3/1/5/3;
+    }
+
+    .grid-4 .bls__collection-column:nth-child(3) {
+        grid-area: 3/3/4/5;
+    }
+
+    .grid-4 .bls__collection-column:last-child {
+        grid-area: 4/3/5/5;
+    }
+
+    .grid-3 .bls__collection-column:first-child {
+        grid-area: 1/1/3/2;
+    }
+
+    .grid-3 .bls__collection-column:last-child {
+        grid-area: 2/2/3/3;
+    }
+}
+
+/* colection links */
+.bls__collection-link-grid .bls__collection-links {
+    width: auto;
+}
+
+.bls__collection-links a:not(.btn-link) {
+    padding: 8.5px 38px;
+}
+
+@media only screen and (max-width: 767px) {
+    .bls__collection-links a:not(.btn-link) {
+        padding: 3.5px 20px;
+    }
+}
+
+.bls__collection-links a {
+    --btn-text-transform: none;
+    --btn-fon-weight: 500;
+}
+
+.bls__collection-links.clt-white a.btn-primary {
+    background-color: var(--color-white);
+    border-color: var(--color-white);
+    color: var(--heading-color);
+}
+
+.bls__collection-links.clt-white a.btn-secondary {
+    background-color: transparent;
+    border-color: var(--color-white);
+    color: var(--color-white);
+}
+
+.bls__collection-links.clt-white a.btn-secondary:hover {
+    background-color: var(--color-white);
+    color: var(--heading-color);
+}
+
+.bls__collection-links.clt-white a.btn-link {
+    --btn-link-color: var(--color-white);
+}

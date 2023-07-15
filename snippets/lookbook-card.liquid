@@ -1,0 +1,62 @@
+{%- liquid
+  assign bst = block.settings
+  assign st = section.settings
+-%}
+<div class="bls__lookbook-items">
+  <div class="bls__lookbook-image">
+    {%- if bst.image != blank -%}
+      {% render 'responsive-image', image: bst.image, aspect_ratio: aspect_ratio, custom_ratio: custom_ratio %}
+    {%- else -%}
+      {%- render 'responsive-image', cls: 'border', aspect_ratio: aspect_ratio, custom_ratio: custom_ratio -%}
+    {%- endif -%}
+  </div>
+  {%- for i in (1..5) -%}
+    {% liquid
+      assign position_top_ = 'position_top_' | append: i
+      assign position_top = bst[position_top_]
+      assign position_left_ = 'position_left_' | append: i
+      assign position_left = bst[position_left_]
+      assign product_ = 'product_' | append: i
+      assign products = bst[product_]
+    %}
+    {%- if products != blank -%}
+      {%- liquid
+        assign product = all_products[products]
+      -%}
+      <div
+        class="bls__product-item {% if st.popup_type == 'popup_item' %}bls__lookbook-click{% endif %} absolute"
+        style="top: {{ position_top }}%; left: {{ position_left }}%;transform: translate(-{{ position_left }}%,-{{ position_top }}%)"
+        data-product-handle="{{ product.handle }}"
+      >
+        <a
+          {% if st.action_click == 'fancybox' %}
+            {%- if st.popup_type == 'popup_item' -%}
+              data-handle-click="{{ block.id }}-{{ i }}" class="lookbook-items-toggle lookbook-action"
+            {%- else -%}
+              class="bls__product-quickview"
+            {%- endif -%}
+          {% else %}
+            href="{{ product.url }}"
+          {% endif %}
+        >
+          {%- if st.dot_type == 'icon' -%}
+            <span class="icon-dot icon">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M5 0C4.44772 0 4 0.447715 4 1V4L1 4C0.447715 4 0 4.44771 0 5C0 5.55228 0.447715 6 1 6H4V9C4 9.55229 4.44772 10 5 10C5.55228 10 6 9.55228 6 9V6H9C9.55228 6 10 5.55229 10 5C10 4.44772 9.55228 4 9 4L6 4V1C6 0.447715 5.55228 0 5 0Z" fill=""></path>
+              </svg>
+            </span>
+          {%- else -%}
+            <span class="icon-dot number">
+              <span>{{ i }}</span>
+            </span>
+          {%- endif -%}
+        </a>
+        {%- if st.popup_type == 'popup_item' -%}
+          <div class="lookbook__popup-items items-{{ block.id }}-{{ i }} absolute transition">
+            {%- render 'product-item' | product: product -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>

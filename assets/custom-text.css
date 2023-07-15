@@ -1,0 +1,26 @@
+.bls__section-custom-text .bls__section-sub-heading{
+    font-size: var(--sub-font-size);
+    font-weight: var(--sub-font-weight);
+    color: var(--sub-color);
+    text-transform: var(--sub-transform);
+    margin-top: var(--sub-mt);
+    margin-bottom: var(--sub-mb);
+}
+.bls__section-custom-text .bls__section-heading{
+    font-size: clamp(2.5rem, 3.5vw, var(--heading-font-size)); 
+    font-weight: var(--heading-font-weight);
+    color: var(--heading-color);
+    text-transform: var(--heading-transform);
+    margin-top: var(--heading-mt);
+    margin-bottom: var(--heading-mb);
+   
+}
+.bls__section-custom-text .bls__section-des{
+    font-size: var(--desc-font-size);
+    font-weight: var(--desc-font-weight);
+    color: var(--desc-color);
+    text-transform: var(--desc-transform);
+    margin-top: var(--desc-mt);
+    margin-bottom: var(--desc-mb);
+
+}

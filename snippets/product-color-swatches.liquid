@@ -1,0 +1,32 @@
+{%- liquid
+  assign st = settings
+  assign color_swatches_size = st.color_swatches_size
+  assign color_swatches_style = st.color_swatches_style
+-%}
+{% unless product.has_only_default_variant %}
+  <div
+    class="bls__product-option option_color flex mt-9"
+  >
+    {%- for option in product.options_with_values -%}
+      {%- if option.name == 'Color' -%}
+        {%- for value in option.values -%}
+          {%- liquid
+            assign active = ''
+            if forloop.first == true
+              assign active = 'active'
+            endif
+          -%}
+          <div
+            class="bls__product-color-swatches bls__option-swatch-js {{ color_swatches_style }} {{ color_swatches_size }} bls_tooltip mr-5 bls__{{ value | downcase | replace: ' ', '-' }} {{ active }}"
+            data-value="{{ value }}"
+            data-color="{{ value | downcase }}"
+            data-position="{{ option.position }}"
+            data-image="{{ product.variants[forloop.index0].featured_image | img_url }}"
+          >
+            <span class="bls_tooltip-content">{{ value }}</span>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{% endunless %}

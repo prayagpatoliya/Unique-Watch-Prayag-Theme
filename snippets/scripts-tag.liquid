@@ -1,0 +1,26 @@
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'easydlg.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'fslightbox.min.js' | asset_url }}" defer="defer"></script>
+{%- assign admin_vi = request.design_mode -%}
+<script defer="defer">
+  var umino_app = {
+    shop: '{{ shop.permanent_domain }}',
+    domain: '{{ shop.domain }}',
+    lic: '{{ settings.purchase_code }}',
+    action: '{{ settings.purchase_code_action }}',
+    mode: '{%- if admin_vi == true -%}admin{%else%}front{%- endif -%}',
+  };
+</script>
+
+<script src="{{ 'theme.min.js' | asset_url }}" defer="defer"></script>
+{%- assign t = template | split: '.' | first -%}
+{%- case t -%}
+  {%- when 'product' -%}
+    <script src="{{ 'main-product.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'glightbox.min.js' | asset_url }}" defer="defer"></script>
+  {%- when 'collection' and collection.handle -%}
+    <script src="{{ 'collection.min.js' | asset_url }}" defer="defer"></script>
+{%- endcase -%}
+{% if template contains 'customers' %}
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+{% endif %}

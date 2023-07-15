@@ -1,0 +1,71 @@
+{%- liquid
+  assign shop_name = shop.name
+  assign logo_svg = settings.logo_svg
+  assign logo_image = settings.logo_image_desktop
+  assign logo_width = settings.logo_width_desktop
+  assign logo_width_mb = settings.logo_width_mobile
+  if isTransparent and template.name == 'index'
+    assign logo_svg = settings.logo_transparent_svg | default: logo_svg
+    assign logo_image = settings.logo_transparent_image | default: logo_image
+  endif
+-%}
+<div class="header__logo logo-center">
+    {% if request.page_type == 'index' %}
+    <h1 class="mb-0">
+    {%- endif -%}
+    <a class="logo-img d-block" href="{{ routes.root_url }}" title="{{ shop_name }}" {{ block.shopify_attributes }} style="min-width:{{ logo_width }}px"> 
+    {%- if logo_svg != blank -%}
+      <div class="header__normal-logo logo_svg d-none d-md-block" style="width: {{ logo_width }}px">
+        {{ logo_svg }}
+      </div>
+      <div class="header__mobile-logo logo_svg d-block d-md-none" style="width: {{ logo_width_mb }}px">
+        {{ logo_svg }}
+      </div>
+    {%- elsif logo_image != blank -%}
+      {%- assign logo_height = logo_width | divided_by: logo_image.aspect_ratio | round -%}
+        <img
+        srcset="{%- if logo_image.width >= 165 -%}{{ logo_image | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if logo_image.width >= 330 -%}{{ logo_image | image_url: width: 330 }} 330w,{%- endif -%}
+            {%- if logo_image.width >= 535 -%}{{ logo_image | image_url: width: 535 }} 535w,{%- endif -%}
+            {%- if logo_image.width >= 750 -%}{{ logo_image | image_url: width: 750 }} 750w,{%- endif -%}
+            {{ logo_image | image_url }} {{ logo_image.width }}w"
+            src="{{ logo_image | image_url: width: 330 }}"
+            sizes="{{ logo_width }}px"
+            loading="lazy"
+            class="header__normal-logo d-none d-md-block"
+            width="{{ logo_width }}"
+            height="{{ logo_height }}"
+            alt="{{ logo_height.alt | default: shop.name | escape }}"
+            style="width: {{ logo_width }}px"
+        >
+      {%- liquid
+        if isTransparent
+          assign logo_image_mb = settings.logo_transparent_svg | default: logo_image
+        else
+          assign logo_image_mb = settings.logo_image_mobile | default: logo_image
+        endif
+        assign logo_height_mb = logo_width_mb | divided_by: logo_image_mb.aspect_ratio | round
+      -%}
+      <img
+        srcset="{%- if logo_image_mb.width >= 165 -%}{{ logo_image_mb | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if logo_image_mb.width >= 330 -%}{{ logo_image_mb | image_url: width: 330 }} 330w,{%- endif -%}
+            {%- if logo_image_mb.width >= 535 -%}{{ logo_image_mb | image_url: width: 535 }} 535w,{%- endif -%}
+            {%- if logo_image_mb.width >= 750 -%}{{ logo_image_mb | image_url: width: 750 }} 750w,{%- endif -%}
+            {{ logo_image_mb | image_url }} {{ logo_image_mb.width }}w"
+        src="{{ logo_image_mb | image_url: width: 330 }}"
+        class="header__mobile-logo d-block d-md-none"
+        loading="lazy"
+        sizes="{{ logo_width_mb }}px"
+        width="{{ logo_width_mb }}"
+        height="{{ logo_height_mb }}"
+        alt="{{ logo_image_mb.alt  default: shop.name | escape }}"
+        style="width: {{ logo_width_mb }}px"
+    >
+    {%- else -%}
+      <span class="text-logo">{{- shop.name -}}</span>
+    {%- endif -%}
+  </a>
+  {% if request.page_type == 'index' %}
+  </h1>
+    {%- endif -%}
+</div>

@@ -1,0 +1,57 @@
+{%- liquid
+  assign st = section.settings
+-%}
+<div class="breadcrumbs {{ st.postion }} py-25 fs-14">
+  <div class="{{ st.layout }}">
+    {% render 'breadcrumbs' %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Breadcrumbs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "container",
+      "options": [
+        {
+          "value": "container",
+          "label": "Default"
+        },
+        {
+          "value": "container-fluid",
+          "label": "Fluid container"
+        },
+        {
+          "value": "full-width",
+          "label": "Full width"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "postion",
+      "label": "Text alignment",
+      "default": "text-left",
+      "options": [
+        {
+          "label": "Center",
+          "value": "text-center"
+        },
+        {
+          "label": "Left",
+          "value": "text-left"
+        },
+        {
+          "label": "Right",
+          "value": "text-right"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

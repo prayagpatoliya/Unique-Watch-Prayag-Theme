@@ -1,0 +1,92 @@
+.img-comp-container {
+    position: relative;
+    cursor: col-resize;
+}
+
+.img-comp-img>* {
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .img-comp-img>* {
+        height: var(--height);
+    }
+}
+
+.img-comp-img .bls__placeholder,
+.img-comp-img img {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    -o-object-fit: cover;
+    object-fit: cover;
+    display: block;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.img-comp-img.img-comp-overlay {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    clip-path: inset(0px 0px 0px var(--percent));
+}
+
+.image-comparison__button {
+    padding: 0;
+    width: 64px;
+    position: absolute;
+    left: var(--percent);
+    top: 0;
+    bottom: 0;
+    transform: translateX(-32px);
+    border: 0;
+    cursor: pointer;
+    z-index: 3;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    transition: none !important;
+    background-color: transparent !important;
+    cursor: col-resize;
+}
+
+.image-comparison__button span {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-white);
+}
+
+.image-comparison__button svg {
+    width: 12px;
+    height: auto;
+    pointer-events: none;
+    margin: 0 5px;
+}
+
+.image-comparison__button svg path {
+    fill: var(--heading-color) !important;
+}
+
+.image-comparison__button:before {
+    content: "";
+    width: 2px;
+    position: absolute;
+    background-color: var(--color-white);
+    top: 0;
+    bottom: 0;
+}
